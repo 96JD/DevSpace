@@ -1,0 +1,23 @@
+<div class="space-y-8 rounded-lg bg-white p-10">
+	<div>
+		<app-text-input
+			label="Title"
+			value="{{ titleInput.value }}"
+			(textInputChange)="onInputChange($event, 'title')"
+		/>
+	</div>
+	<div>
+		<app-textarea-input
+			label="About"
+			value="{{ descriptionInput.value }}"
+			(textareaInputChange)="onInputChange($event, 'about')"
+		/>
+	</div>
+	<div>
+		<app-submit-button
+			text="Post"
+			[isDisabled]="!isFormValid"
+			(click)="parsedQuestion ? updateQuestion() : postQuestion()"
+		/>
+	</div>
+</div>

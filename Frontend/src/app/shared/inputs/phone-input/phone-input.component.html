@@ -1,0 +1,14 @@
+<app-input-label text="Phone" [required]="true" />
+<ngx-intl-tel-input
+	cssClass="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-rose-500 focus:outline-none focus:ring-rose-500 sm:text-sm"
+	[maxLength]="15"
+	[selectedCountryISO]="countryISO.Norway"
+	[searchCountryFlag]="true"
+	[searchCountryField]="[searchCountryField.Iso2, searchCountryField.Name]"
+	[phoneValidation]="true"
+	[formControl]="phoneInput!"
+></ngx-intl-tel-input>
+<div *ngIf="phoneInput?.touched">
+	<app-error-span *ngIf="phoneInput?.value && phoneInput?.invalid" error="Phone is invalid!" />
+	<app-error-span *ngIf="phoneInput?.errors?.['required']" error="Phone is required!" />
+</div>

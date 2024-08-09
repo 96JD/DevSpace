@@ -1,0 +1,310 @@
+<div class="sm:hidden">
+	<label for="question-tabs" class="sr-only">Select a tab</label>
+	<select
+		id="question-tabs"
+		class="block w-full rounded-md border-gray-300 text-base font-medium text-gray-900 shadow-sm focus:border-rose-500 focus:ring-rose-500"
+		[(ngModel)]="currentTab"
+		(change)="selectTab(currentTab)"
+	>
+		<option *ngFor="let tab of tabs" [value]="tab.index" [selected]="tab.index === currentTab">
+			{{ tab.name }}
+		</option>
+	</select>
+</div>
+<div class="hidden sm:block">
+	<nav class="isolate flex divide-x divide-gray-200 rounded-lg shadow" aria-label="Tabs">
+		<a
+			*ngFor="let tab of tabs; let i = index; let isFirst = first; let isLast = last"
+			[ngClass]="{
+				'rounded-l-lg': isFirst,
+				'rounded-r-lg': isLast,
+				'text-gray-900': currentTab === i,
+				'text-gray-500 hover:text-gray-700': currentTab !== i
+			}"
+			class="group relative min-w-0 flex-1 cursor-pointer overflow-hidden bg-white px-6 py-4 text-center text-sm font-medium hover:bg-gray-50 focus:z-10"
+			href="#"
+			aria-current="page"
+			(click)="selectTab(i)"
+		>
+			{{ tab.name }}
+			<span
+				[ngClass]="{ 'bg-rose-500': currentTab === i, 'bg-transparent': currentTab !== i }"
+				class="absolute inset-x-0 bottom-0 h-0.5"
+				aria-hidden="true"
+			></span>
+		</a>
+	</nav>
+</div>
+<div class="mt-4">
+	<h1 class="sr-only">Questions</h1>
+	<app-spinner *ngIf="loading" class="flex justify-center" />
+	<ul *ngIf="!loading" class="space-y-4">
+		<li *ngFor="let question of questions" class="rounded-lg bg-white px-4 py-6 shadow sm:p-6">
+			<article aria-labelledby="question-title-81614">
+				<div>
+					<div class="flex space-x-3">
+						<div class="flex-shrink-0">
+							<app-image classNames="h-10 w-10 rounded-full" url="{{ question.User.ProfilePicture }}" />
+						</div>
+						<div class="min-w-0 flex-1">
+							<p class="text-sm font-medium text-gray-900">
+								<a [routerLink]="['/' + appRoutes.Profile, appRoutes.MyBio]" class="hover:underline">{{
+									question.User.FirstName + " " + question.User.LastName
+								}}</a>
+							</p>
+							<p class="text-sm text-gray-500">
+								{{ question.CreatedAt | date: "short" }}
+							</p>
+						</div>
+						<div class="flex flex-shrink-0 self-center">
+							<div class="relative inline-block text-left">
+								<button
+									(click)="toggleQuestionMenu(question)"
+									type="button"
+									class="-m-2 flex items-center rounded-full p-2 text-gray-400 hover:text-gray-600"
+									aria-expanded="false"
+									aria-haspopup="true"
+								>
+									<span class="sr-only">Open options</span>
+									<svg
+										id="question-menu"
+										class="h-5 w-5"
+										xmlns="http://www.w3.org/2000/svg"
+										viewBox="0 0 20 20"
+										fill="currentColor"
+										aria-hidden="true"
+									>
+										<path
+											d="M10 3a1.5 1.5 0 110 3 1.5 1.5 0 010-3zM10 8.5a1.5 1.5 0 110 3 1.5 1.5 0 010-3zM11.5 15.5a1.5 1.5 0 10-3 0 1.5 1.5 0 003 0z"
+										/>
+									</svg>
+								</button>
+
+								<div
+									*ngIf="question['isQuestionMenuOpen']"
+									class="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+									role="menu"
+									aria-orientation="vertical"
+									aria-labelledby="options-menu-0-button"
+									tabindex="-1"
+								>
+									<div class="py-1">
+										<button
+											*ngIf="!isUserFavorite(question)"
+											id="options-menu-0-item-0"
+											class="flex w-full cursor-pointer px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+											(click)="addQuestionToFavorite(question)"
+											role="menuitem"
+											tabindex="-1"
+										>
+											<svg
+												class="mr-3 h-5 w-5 text-gray-400"
+												xmlns="http://www.w3.org/2000/svg"
+												fill="none"
+												viewBox="0 0 24 24"
+												stroke-width="1.5"
+												stroke="currentColor"
+											>
+												<path
+													stroke-linecap="round"
+													stroke-linejoin="round"
+													d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z"
+												/>
+											</svg>
+											Add to favorites
+										</button>
+										<button
+											*ngIf="isUserFavorite(question)"
+											id="options-menu-0-item-0"
+											class="flex w-full cursor-pointer px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+											(click)="deleteQuestionFromFavorite(question)"
+											role="menuitem"
+											tabindex="-1"
+										>
+											<svg
+												class="mr-3 h-5 w-5 text-rose-400"
+												xmlns="http://www.w3.org/2000/svg"
+												fill="#f43f5e"
+												viewBox="0 0 24 24"
+												stroke-width="1.5"
+												stroke="currentColor"
+											>
+												<path
+													stroke-linecap="round"
+													stroke-linejoin="round"
+													d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z"
+												/>
+											</svg>
+											Remove from favorites
+										</button>
+										<ng-container *ngIf="loggedInUser.Id === question.UserId">
+											<button
+												id="options-menu-0-item-1"
+												class="flex w-full cursor-pointer px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+												role="menuitem"
+												tabindex="-1"
+												(click)="updateQuestion(question)"
+											>
+												<svg
+													class="mr-3 h-5 w-5 text-gray-400"
+													xmlns="http://www.w3.org/2000/svg"
+													fill="none"
+													viewBox="0 0 24 24"
+													stroke-width="1.5"
+													stroke="currentColor"
+												>
+													<path
+														stroke-linecap="round"
+														stroke-linejoin="round"
+														d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"
+													/>
+												</svg>
+												Edit
+											</button>
+											<button
+												id="options-menu-0-item-2"
+												class="flex w-full cursor-pointer px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+												role="menuitem"
+												tabindex="-1"
+												(click)="deleteQuestion(question)"
+											>
+												<svg
+													class="mr-3 h-5 w-5 text-gray-400"
+													xmlns="http://www.w3.org/2000/svg"
+													fill="none"
+													viewBox="0 0 24 24"
+													stroke-width="1.5"
+													stroke="currentColor"
+												>
+													<path
+														stroke-linecap="round"
+														stroke-linejoin="round"
+														d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
+													/>
+												</svg>
+												Delete
+											</button>
+										</ng-container>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<h2 id="question-title-81614" class="mt-4 text-base font-medium text-gray-900">
+						{{ question.Title }}
+					</h2>
+				</div>
+				<div class="mt-2 space-y-4 text-sm text-gray-700">
+					{{ question.Description }}
+				</div>
+				<div class="mt-6 flex justify-between space-x-8">
+					<div class="flex space-x-6">
+						<span class="inline-flex items-center text-sm">
+							<button
+								*ngIf="!hasUserLiked(question)"
+								type="button"
+								class="inline-flex space-x-2 text-gray-400 hover:text-gray-500"
+								title="{{ getWhoLikes(question) }}"
+								(click)="likeQuestion(question)"
+							>
+								<svg
+									class="h-5 w-5"
+									xmlns="http://www.w3.org/2000/svg"
+									viewBox="0 0 20 20"
+									fill="currentColor"
+									aria-hidden="true"
+								>
+									<path
+										d="M1 8.25a1.25 1.25 0 112.5 0v7.5a1.25 1.25 0 11-2.5 0v-7.5zM11 3V1.7c0-.268.14-.526.395-.607A2 2 0 0114 3c0 .995-.182 1.948-.514 2.826-.204.54.166 1.174.744 1.174h2.52c1.243 0 2.261 1.01 2.146 2.247a23.864 23.864 0 01-1.341 5.974C17.153 16.323 16.072 17 14.9 17h-3.192a3 3 0 01-1.341-.317l-2.734-1.366A3 3 0 006.292 15H5V8h.963c.685 0 1.258-.483 1.612-1.068a4.011 4.011 0 012.166-1.73c.432-.143.853-.386 1.011-.814.16-.432.248-.9.248-1.388z"
+									/>
+								</svg>
+								<span class="font-medium text-gray-900">{{ question.QuestionLikes.length }}</span>
+								<span class="sr-only">likes</span>
+							</button>
+							<button
+								*ngIf="hasUserLiked(question)"
+								type="button"
+								class="inline-flex space-x-2 text-gray-400 hover:text-gray-500"
+								title="{{ getWhoLikes(question) }}"
+								(click)="unlikeQuestion(question)"
+							>
+								<svg
+									class="h-5 w-5"
+									xmlns="http://www.w3.org/2000/svg"
+									viewBox="0 0 20 20"
+									fill="#24a0ed"
+									aria-hidden="true"
+								>
+									<path
+										d="M1 8.25a1.25 1.25 0 112.5 0v7.5a1.25 1.25 0 11-2.5 0v-7.5zM11 3V1.7c0-.268.14-.526.395-.607A2 2 0 0114 3c0 .995-.182 1.948-.514 2.826-.204.54.166 1.174.744 1.174h2.52c1.243 0 2.261 1.01 2.146 2.247a23.864 23.864 0 01-1.341 5.974C17.153 16.323 16.072 17 14.9 17h-3.192a3 3 0 01-1.341-.317l-2.734-1.366A3 3 0 006.292 15H5V8h.963c.685 0 1.258-.483 1.612-1.068a4.011 4.011 0 012.166-1.73c.432-.143.853-.386 1.011-.814.16-.432.248-.9.248-1.388z"
+									/>
+								</svg>
+								<span class="font-medium text-gray-900">{{ question.QuestionLikes.length }}</span>
+								<span class="sr-only">likes</span>
+							</button>
+						</span>
+						<span class="inline-flex items-center text-sm">
+							<button
+								type="button"
+								class="inline-flex space-x-2 text-gray-400 hover:text-gray-500"
+								title="Add an answer"
+								(click)="toggleAnswerInput(question)"
+							>
+								<svg
+									class="h-5 w-5"
+									xmlns="http://www.w3.org/2000/svg"
+									viewBox="0 0 20 20"
+									fill="currentColor"
+									aria-hidden="true"
+								>
+									<path
+										fill-rule="evenodd"
+										d="M10 2c-2.236 0-4.43.18-6.57.524C1.993 2.755 1 4.014 1 5.426v5.148c0 1.413.993 2.67 2.43 2.902.848.137 1.705.248 2.57.331v3.443a.75.75 0 001.28.53l3.58-3.579a.78.78 0 01.527-.224 41.202 41.202 0 005.183-.5c1.437-.232 2.43-1.49 2.43-2.903V5.426c0-1.413-.993-2.67-2.43-2.902A41.289 41.289 0 0010 2zm0 7a1 1 0 100-2 1 1 0 000 2zM8 8a1 1 0 11-2 0 1 1 0 012 0zm5 1a1 1 0 100-2 1 1 0 000 2z"
+										clip-rule="evenodd"
+									/>
+								</svg>
+								<span class="font-medium text-gray-900">{{ question.QuestionAnswers.length }}</span>
+								<span class="sr-only">answers</span>
+							</button>
+						</span>
+					</div>
+				</div>
+			</article>
+			<div *ngIf="question.QuestionAnswers.length > 0" class="relative mt-2">
+				<div class="absolute inset-0 flex items-center" aria-hidden="true">
+					<div class="w-full border-t border-gray-300"></div>
+				</div>
+				<button class="relative m-auto flex" (click)="toggleAnswersSection(question)">
+					<span class="cursor-pointer bg-white px-2 text-sm text-gray-500">Answers</span>
+				</button>
+			</div>
+			<ul *ngIf="question['isAnswersSectionOpen']" class="divide-y divide-gray-200">
+				<li *ngFor="let q of question.QuestionAnswers" class="py-4">
+					<div class="flex items-center space-x-4">
+						<div class="flex-shrink-0">
+							<app-image
+								classNames="cursor-pointer h-10 rounded-full w-10"
+								url="{{ q.User.ProfilePicture }}"
+							/>
+						</div>
+						<div class="min-w-0 flex-1">
+							<p class="text-sm font-medium text-gray-900">
+								{{ q.User.FirstName + " " + q.User.LastName }}
+							</p>
+							<p class="text-sm text-gray-500">{{ q.Answer }}</p>
+						</div>
+					</div>
+				</li>
+			</ul>
+			<div *ngIf="question['isAnswerInputOpen']">
+				<div>
+					<app-textarea-input label="Answer" (textareaInputChange)="onAnswerChange($event)" />
+				</div>
+				<div class="mt-5">
+					<app-submit-button text="Post" [isDisabled]="!isFormValid" (click)="postAnswer(question)" />
+				</div>
+			</div>
+		</li>
+	</ul>
+	<app-view-button label="{{ label }}" *ngIf="!loading && label.length > 0" (click)="loadMoreQuestions()" />
+</div>

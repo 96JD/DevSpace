@@ -1,0 +1,13 @@
+<app-input-label text="{{ label }}" [required]="true" />
+<textarea
+	id="about"
+	class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-rose-500 focus:outline-none focus:ring-rose-500 sm:text-sm"
+	name="about"
+	rows="4"
+	cols="50"
+	required
+	[formControl]="textareaInput!"
+></textarea>
+<div *ngIf="textareaInput?.invalid && (textareaInput?.dirty || textareaInput?.touched)">
+	<app-error-span *ngIf="textareaInput?.hasError('required')" error="{{ label }} is required!" />
+</div>

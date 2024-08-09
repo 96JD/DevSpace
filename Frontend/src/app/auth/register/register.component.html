@@ -1,0 +1,84 @@
+<app-anonymous-form-wrapper
+	header="Register new account"
+	paragraph="Already have an account?"
+	route="{{ appRoutes.Default }}"
+	routerLinkText="Sign in here"
+>
+	<div>
+		<app-file-input label="Profile Picture" (fileInputChange)="onInputChange($event, 'profilePicture')" />
+	</div>
+
+	<div class="mt-6 grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-6">
+		<div class="sm:col-span-3">
+			<app-text-input label="First name" (textInputChange)="onInputChange($event, 'firstName')" />
+		</div>
+
+		<div class="sm:col-span-3">
+			<app-text-input label="Last name" (textInputChange)="onInputChange($event, 'lastName')" />
+		</div>
+	</div>
+
+	<div>
+		<app-email-input (emailInputChange)="onInputChange($event, 'email')" />
+	</div>
+
+	<div>
+		<app-phone-input (phoneInputChange)="onInputChange($event, 'phone')" />
+	</div>
+
+	<div>
+		<app-date-input label="Birthday" (dateInputChange)="onInputChange($event, 'birthday')" />
+	</div>
+
+	<div>
+		<app-text-input label="Job Title" (textInputChange)="onInputChange($event, 'jobTitle')" />
+	</div>
+
+	<div class="mt-6 grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-6">
+		<div class="sm:col-span-3">
+			<app-text-input label="City" (textInputChange)="onInputChange($event, 'city')" />
+		</div>
+
+		<div class="sm:col-span-3">
+			<app-number-input label="Salary" (numberInputChange)="onInputChange($event, 'salary')" />
+		</div>
+	</div>
+
+	<div>
+		<app-textarea-input label="About" (textareaInputChange)="onInputChange($event, 'about')" />
+	</div>
+
+	<div>
+		<app-password-input
+			label="New Password"
+			[isPasswordPatternRequired]="true"
+			(passwordInputChange)="onInputChange($event, 'newPassword')"
+		/>
+	</div>
+	<div>
+		<app-password-input
+			label="Confirm Password"
+			[isPasswordPatternRequired]="true"
+			(passwordInputChange)="onInputChange($event, 'confirmPassword')"
+		/>
+	</div>
+	<app-error-span *ngIf="isFormValid && !passwordsMatch" error="Passwords must match!" />
+
+	<div class="relative flex items-start">
+		<app-checkbox-input label="" (checkboxInputChange)="onInputChange($event, 'termsAndPrivacy')" />
+		<div class="ml-3 text-sm leading-6">
+			<span class="text-gray-900"
+				>I have read & agree to the
+				<app-link-button route="{{ '/' + appRoutes.Terms }}" text="terms" />
+
+				& <app-link-button route="{{ '/' + appRoutes.Privacy }}" text="privacy policy" />
+				.
+			</span>
+		</div>
+	</div>
+	<app-error-span *ngIf="!termsAndPrivacyValue" error="Checkbox is required!" />
+
+	<div>
+		<app-submit-button text="Register" [isDisabled]="!isFormValid || !passwordsMatch" (click)="register()" />
+	</div>
+</app-anonymous-form-wrapper>

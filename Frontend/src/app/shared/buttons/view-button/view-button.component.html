@@ -1,0 +1,7 @@
+<div class="mt-6">
+	<a *ngIf="route.length > 0" class="{{ classNames }}" [routerLink]="route">{{ label }}</a>
+
+	<button *ngIf="route.length === 0" class="{{ classNames }}">
+		{{ label }}
+	</button>
+</div>

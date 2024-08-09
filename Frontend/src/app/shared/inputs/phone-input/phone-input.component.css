@@ -1,0 +1,31 @@
+.iti.iti--allow-dropdown {
+	width: 100%;
+}
+
+.iti__flag-container.open.show {
+	width: inherit;
+}
+
+.dropdown-menu.country-dropdown.show {
+	width: inherit;
+}
+
+.iti .iti__country-list {
+	font-size: 14px;
+	overflow-x: hidden;
+}
+
+.iti .search-container input {
+	font-size: 14px;
+	border-color: #c7cace;
+	border-radius: 0;
+	padding: 5px 10px;
+}
+
+ngx-intl-tel-input input:focus {
+	outline: none;
+}
+
+ngx-intl-tel-input input::-webkit-input-placeholder {
+	color: #bac2c7;
+}

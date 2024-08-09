@@ -1,0 +1,112 @@
+<div class="flex h-full">
+	<div class="flex min-w-0 flex-1 flex-col overflow-hidden">
+		<div class="relative z-0 flex flex-1 overflow-hidden">
+			<main class="relative z-0 flex-1 overflow-y-auto focus:outline-none xl:order-last">
+				<article>
+					<div>
+						<div>
+							<app-image classNames="h-32 w-full object-cover lg:h-48" url="{{ user?.CoverPhoto }}" />
+						</div>
+						<div class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+							<div class="-mt-12 sm:-mt-16 sm:flex sm:items-end sm:space-x-5">
+								<div class="flex">
+									<app-image
+										classNames="h-24 w-24 rounded-full sm:h-32 sm:w-32"
+										url="{{ user?.ProfilePicture }}"
+									/>
+								</div>
+								<div
+									class="mt-6 sm:flex sm:min-w-0 sm:flex-1 sm:items-center sm:justify-end sm:space-x-6 sm:pb-1"
+								>
+									<div class="mt-6 min-w-0 flex-1 sm:hidden 2xl:block">
+										<h1 class="truncate text-2xl font-bold text-gray-900">
+											{{ user?.FirstName + " " + user?.LastName }}
+										</h1>
+									</div>
+									<div
+										*ngIf="!isMyProfile"
+										class="mt-6 flex flex-col justify-stretch space-y-3 sm:flex-row sm:space-x-4 sm:space-y-0"
+									>
+										<a
+											href="mailto:{{ user?.Email }}"
+											class="inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-2"
+										>
+											<app-email-svg class="-ml-1 mr-2" />
+											Email
+										</a>
+										<button
+											*ngIf="!isFollowed"
+											(click)="followUser(user?.Id!)"
+											type="button"
+											class="inline-flex justify-center rounded-md border border-gray-300 bg-blue-50 px-4 py-2 text-sm font-medium text-blue-700 shadow-sm hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+										>
+											<svg
+												class="-ml-1 mr-2 h-5 w-5 text-blue-700"
+												xmlns="http://www.w3.org/2000/svg"
+												fill="none"
+												viewBox="0 0 24 24"
+												stroke-width="1.5"
+												stroke="currentColor"
+											>
+												<path
+													stroke-linecap="round"
+													stroke-linejoin="round"
+													d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z"
+												/>
+											</svg>
+											Follow
+										</button>
+										<button
+											*ngIf="isFollowed"
+											type="button"
+											class="inline-flex justify-center rounded-md border border-gray-300 bg-rose-50 px-4 py-2 text-sm font-medium text-rose-700 shadow-sm hover:bg-rose-100 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:ring-offset-2"
+											(click)="unfollowUser(user?.Id!)"
+										>
+											<svg
+												class="-ml-1 mr-2 h-5 w-5 text-rose-700"
+												xmlns="http://www.w3.org/2000/svg"
+												fill="none"
+												viewBox="0 0 24 24"
+												stroke-width="1.5"
+												stroke="currentColor"
+											>
+												<path
+													stroke-linecap="round"
+													stroke-linejoin="round"
+													d="M22 10.5h-6m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z"
+												/>
+											</svg>
+											Unfollow
+										</button>
+									</div>
+								</div>
+							</div>
+							<div class="mt-6 hidden min-w-0 flex-1 sm:block 2xl:hidden">
+								<h1 class="truncate text-2xl font-bold text-gray-900">
+									{{ user?.FirstName + " " + user?.LastName }}
+								</h1>
+							</div>
+						</div>
+					</div>
+					<div class="mt-6 sm:mt-2 2xl:mt-5">
+						<div class="border-b border-gray-200">
+							<div class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+								<nav class="-mb-px flex space-x-8" aria-label="Tabs">
+									<a
+										class="whitespace-nowrap border-b-2 border-pink-500 px-1 py-4 text-sm font-medium text-gray-900"
+										aria-current="page"
+									>
+										Bio
+									</a>
+								</nav>
+							</div>
+						</div>
+					</div>
+					<div class="mx-auto max-w-5xl px-2">
+						<router-outlet />
+					</div>
+				</article>
+			</main>
+		</div>
+	</div>
+</div>

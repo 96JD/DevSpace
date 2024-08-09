@@ -1,0 +1,10 @@
+<app-input-label text="{{ label }}" [required]="true" />
+<input
+	class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-rose-500 focus:outline-none focus:ring-rose-500 sm:text-sm"
+	name="{{ label | lowercase }}"
+	[formControl]="textInput!"
+/>
+
+<div *ngIf="textInput?.invalid && (textInput?.dirty || textInput?.touched)">
+	<app-error-span *ngIf="textInput?.hasError('required')" error="{{ label }} is required!" />
+</div>

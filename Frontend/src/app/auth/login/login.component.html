@@ -1,0 +1,31 @@
+<app-anonymous-form-wrapper
+	header="Sign in to your account"
+	paragraph="No account?"
+	route="{{ '/' + appRoutes.Register }}"
+	routerLinkText="Register here"
+>
+	<div>
+		<app-email-input (emailInputChange)="onInputChange($event, 'email')" />
+	</div>
+	<div>
+		<app-password-input label="Password" (passwordInputChange)="onInputChange($event, 'password')" />
+		<div class="text-right">
+			<app-link-button
+				route="{{ '/' + appRoutes.ForgotYourPassword }}"
+				text="Forgot your password?"
+				color="blue"
+			/>
+		</div>
+	</div>
+	<div>
+		<app-submit-button text="Sign in" [isDisabled]="!isFormValid" (click)="login()" />
+	</div>
+	<div *ngIf="!devEnv">
+		<div>
+			<app-divider />
+		</div>
+		<div class="py-6">
+			<app-submit-button text="Sign in with test user" (click)="login()" />
+		</div>
+	</div>
+</app-anonymous-form-wrapper>

@@ -1,0 +1,80 @@
+<section aria-labelledby="who-to-follow-heading">
+	<div class="rounded-lg bg-white shadow">
+		<div class="p-6">
+			<h2 id="who-to-follow-heading" class="text-lg font-medium text-gray-900">Who to follow</h2>
+			<app-divider />
+			<div class="mt-6 flow-root">
+				<app-spinner *ngIf="loading" class="flex justify-center" />
+				<ul *ngIf="!loading" class="-my-4 divide-y divide-gray-200">
+					<li *ngFor="let user of whoToFollow" class="flex items-center space-x-3 py-4">
+						<div class="flex-shrink-0">
+							<app-image classNames="h-8 w-8 rounded-full" url="{{ user.ProfilePicture }}" />
+						</div>
+						<div class="min-w-0 flex-1">
+							<a
+								class="truncate text-sm font-medium text-gray-900"
+								[routerLink]="['/' + appRoutes.Profile, appRoutes.MyBio]"
+								[queryParams]="{ user: stringifyJson(user) }"
+							>
+								{{ user.FirstName + " " + user.LastName }}
+							</a>
+							<p class="truncate text-sm text-gray-500">
+								{{ user.Email }}
+							</p>
+							<p
+								class="inline-flex rounded-full bg-violet-100 px-2 text-xs font-semibold leading-5 text-violet-800"
+							>
+								{{ user.JobTitle }}
+							</p>
+						</div>
+						<div class="flex-shrink-0">
+							<button
+								*ngIf="!user['isFollowed']"
+								type="button"
+								class="inline-flex items-center rounded-full bg-blue-50 px-3 py-0.5 text-sm font-medium hover:bg-blue-100"
+								title="Follow"
+								(click)="followUser(user.Id)"
+							>
+								<svg
+									class="h-5 w-5 text-blue-700"
+									xmlns="http://www.w3.org/2000/svg"
+									viewBox="0 0 20 20"
+									fill="currentColor"
+									aria-hidden="true"
+								>
+									<path
+										d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z"
+									/>
+								</svg>
+							</button>
+							<button
+								*ngIf="user['isFollowed']"
+								type="button"
+								class="inline-flex items-center rounded-full bg-rose-50 px-3 py-0.5 text-sm font-medium hover:bg-rose-100"
+								title="Unfollow"
+								(click)="unfollowUser(user.Id)"
+							>
+								<svg
+									class="h-5 w-5 text-rose-700"
+									xmlns="http://www.w3.org/2000/svg"
+									fill="none"
+									viewBox="0 0 24 24"
+									stroke-width="1.5"
+									stroke="currentColor"
+								>
+									<path stroke-linecap="round" stroke-linejoin="round" d="M18 12H6" />
+								</svg>
+							</button>
+						</div>
+					</li>
+				</ul>
+			</div>
+			<app-view-button
+				route="{{ '/' + appRoutes.WhoToFollow }}"
+				label="{{ label }}"
+				*ngIf="label.length > 0"
+				(click)="loadMoreWhoToFollowUsers()"
+			/>
+		</div>
+	</div>
+</section>
